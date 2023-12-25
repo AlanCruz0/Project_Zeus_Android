@@ -1,24 +1,13 @@
 package com.example.projectzeus.models;
 
 public class user {
-    private String name;
     private String email;
     private String password;
 
-    public user(String name, String email, String password) {
-        this.name = name;
+    public user(String email, String password) {
         this.email = email;
         this.password = password;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
     }
