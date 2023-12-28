@@ -3,6 +3,7 @@ package com.example.projectzeus.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
 import com.example.projectzeus.models.response.UserResponse;
 import com.example.projectzeus.models.user;
@@ -17,5 +18,8 @@ public class LoginViewModel extends ViewModel {
 
     public LiveData<UserResponse> loginUser(UserRequest user) {
         return userRepository.loginUser(user);
+    }
+    public LiveData<UserResponse> registerUser(RegisterRequest user) {
+        return userRepository.registerUser(user);
     }
 }
