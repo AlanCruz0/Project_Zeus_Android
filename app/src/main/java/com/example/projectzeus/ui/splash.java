@@ -17,14 +17,13 @@ public class splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         countDownTimer = new CountDownTimer(5000,1000) {
             @Override
-            public void onTick(long millisUntilFinished) {
-                //do nothing
-            }
+            public void onTick(long millisUntilFinished) { }
 
             @Override
             public void onFinish() {
                 Intent intent = new Intent(splash.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         }.start();
     }

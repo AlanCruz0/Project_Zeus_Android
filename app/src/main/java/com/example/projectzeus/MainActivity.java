@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -36,10 +38,7 @@ public class MainActivity extends AppCompatActivity {
         etpassword = findViewById(R.id.edtpassword);
         btnlogin = findViewById(R.id.btnlogin);
 
-        // Crear un SpannableString
         SpannableString spannableString = new SpannableString("Si aun no tienes cuenta, Registrate");
-
-        // Crear un ClickableSpan para la palabra "Registrate"
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View view) {
@@ -47,15 +46,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         };
-
-        // Establecer el ClickableSpan en la palabra "Registrate"
         spannableString.setSpan(clickableSpan, 25, 35, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        // Establecer el texto en el TextView
         txtregister.setText(spannableString);
-
-        // Permitir la detección de clics en los enlaces del TextView
         txtregister.setMovementMethod(LinkMovementMethod.getInstance());
+
+        SharedPrefHelper preferences = new SharedPrefHelper(this);
+        String savedToken = preferences.getToken();
+        Log.d("TAG", "onCreate: " + savedToken);
+
+        if (savedToken != null) {
+            Intent intent = new Intent(MainActivity.this, Home.class);
+            startActivity(intent);
+            finish();
+        }
+
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,16 +82,12 @@ public class MainActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(MainActivity.this, Home.class);
                             startActivity(intent);
-                            // Realizar acciones adicionales según sea necesario después del éxito del inicio de sesión
+                            finish();
                         } else {
                             Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                            // Realizar acciones adicionales según sea necesario después del fallo del inicio de sesión
                         }
-
-                        // Habilitar el botón después de recibir la respuesta
                         btnlogin.setEnabled(true);
                     });
-                    // Deshabilitar el botón durante la autenticación
                     btnlogin.setEnabled(false);
                 }
             }

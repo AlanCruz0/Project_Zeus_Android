@@ -80,6 +80,7 @@ public class register extends AppCompatActivity {
 
                             Intent intent = new Intent(register.this, Home.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(register.this, "Login failed", Toast.LENGTH_SHORT).show();
                         }
