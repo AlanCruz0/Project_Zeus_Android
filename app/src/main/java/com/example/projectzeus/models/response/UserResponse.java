@@ -6,18 +6,39 @@ package com.example.projectzeus.models.response;
 import java.util.List;
 
 public class UserResponse {
-    private String accessToken;
-    private String tokenType;
+    private String access_token;
+    private String token_type;
     private User user;
 
-    public String getAccessToken() { return accessToken; }
-    public void setAccessToken(String value) { this.accessToken = value; }
+    public String getAccessToken() { return access_token; }
+    public void setAccessToken(String value) { this.access_token = value; }
 
-    public String getTokenType() { return tokenType; }
-    public void setTokenType(String value) { this.tokenType = value; }
+    public String getTokenType() { return token_type; }
+    public void setTokenType(String value) { this.token_type = value; }
 
     public User getUser() { return user; }
     public void setUser(User value) { this.user = value; }
+    public Long getUserId() {
+        if (user != null) {
+            return user.getId();
+        } else {
+            return null;
+        }
+    }
+    public String getUserName() {
+        if (user != null) {
+            return user.getName();
+        } else {
+            return null;
+        }
+    }
+    public String getUserEmail() {
+        if (user != null) {
+            return user.getEmail();
+        } else {
+            return null;
+        }
+    }
 }
 
 class User {
@@ -28,7 +49,7 @@ class User {
     public String getName() { return name; }
     public void setName(String value) { this.name = value; }
 
-    public long getid() { return id; }
+    public long getId() { return id; }
     public void setid(long value) { this.id = value; }
 
     public String getEmail() { return email; }

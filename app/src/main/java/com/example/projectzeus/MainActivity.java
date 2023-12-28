@@ -66,34 +66,27 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     UserRequest user = new UserRequest(email, password);
                     loginViewModel = new ViewModelProvider(MainActivity.this).get(LoginViewModel.class);
+                    loginViewModel.loginUser(user).observe(MainActivity.this, token -> {
+                        if (token != null) {
+                            Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            loginViewModel.loginUser(user).observe(MainActivity.this, token -> {
-                                Log.d("TAG", "onChanged: " + token.getAccessToken());
-                                if (token != null) {
-                                    Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
+                            SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(MainActivity.this);
+                            sharedPreferencesHelper.saveToken(token.getAccessToken());
+                            sharedPreferencesHelper.saveUserId(token.getUserId());
+                            sharedPreferencesHelper.saveUserName(token.getUserName());
+                            sharedPreferencesHelper.saveUserEmail(token.getUserEmail());
 
-                                    //SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(MainActivity.this);
-                                    //sharedPreferencesHelper.saveToken(token.getAccessToken());
-
-                                    Log.d("DATOS", token.getAccessToken());
-
-                                    Intent intent = new Intent(MainActivity.this, Home.class);
-                                    startActivity(intent);
-                                    // Realizar acciones adicionales según sea necesario después del éxito del inicio de sesión
-                                } else {
-                                    Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                                    // Realizar acciones adicionales según sea necesario después del fallo del inicio de sesión
-                                }
-
-                                // Habilitar el botón después de recibir la respuesta
-                                btnlogin.setEnabled(true);
-                            });
+                            Intent intent = new Intent(MainActivity.this, Home.class);
+                            startActivity(intent);
+                            // Realizar acciones adicionales según sea necesario después del éxito del inicio de sesión
+                        } else {
+                            Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                            // Realizar acciones adicionales según sea necesario después del fallo del inicio de sesión
                         }
-                    }, 3000);
 
+                        // Habilitar el botón después de recibir la respuesta
+                        btnlogin.setEnabled(true);
+                    });
                     // Deshabilitar el botón durante la autenticación
                     btnlogin.setEnabled(false);
                 }
