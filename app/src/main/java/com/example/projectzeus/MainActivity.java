@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -51,45 +48,55 @@ public class MainActivity extends AppCompatActivity {
         txtregister.setMovementMethod(LinkMovementMethod.getInstance());
 
         SharedPrefHelper preferences = new SharedPrefHelper(this);
-        String savedToken = preferences.getToken();
-        Log.d("TAG", "onCreate: " + savedToken);
-
-        if (savedToken != null) {
-            Intent intent = new Intent(MainActivity.this, Home.class);
-            startActivity(intent);
-            finish();
-        }
-
-        btnlogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = etemail.getText().toString().trim();
-                String password = etpassword.getText().toString().trim();
-                if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Por favor ingrese todos los campos", Toast.LENGTH_SHORT).show();
+        Log.d("MainActivity", "Stored userId: " + preferences.getUserId());
+        LoginViewModel loginViewModelVal = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModelVal.validateUser(this).observe(this, validateResponse -> {
+            if (validateResponse != null) {
+                if (validateResponse.getStatus() == 200) {
+                    //Toast.makeText(this, "Token valido", Toast.LENGTH_SHORT).show();
+                    Log.i("MainActivity", "Token valido");
+                    Intent intent = new Intent(MainActivity.this, Home.class);
+                    startActivity(intent);
+                    finish();
                 } else {
-                    UserRequest user = new UserRequest(email, password);
-                    loginViewModel = new ViewModelProvider(MainActivity.this).get(LoginViewModel.class);
-                    loginViewModel.loginUser(user).observe(MainActivity.this, token -> {
-                        if (token != null) {
-                            Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
-
-                            SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(MainActivity.this);
-                            sharedPreferencesHelper.saveToken(token.getAccessToken());
-                            sharedPreferencesHelper.saveUserId(token.getUserId());
-                            sharedPreferencesHelper.saveUserName(token.getUserName());
-                            sharedPreferencesHelper.saveUserEmail(token.getUserEmail());
-
-                            Intent intent = new Intent(MainActivity.this, Home.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
-                        }
-                        btnlogin.setEnabled(true);
-                    });
-                    btnlogin.setEnabled(false);
+                    Log.i("MainActivity", "Token invalido");
+                    //Toast.makeText(this, "Token invalido", Toast.LENGTH_SHORT).show();
+                    preferences.clearUserData();
                 }
+            } else {
+                Log.i("MainActivity", "Respuesta nula");
+                //Toast.makeText(this, "Respuesta nula", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnlogin.setOnClickListener(v -> {
+            String email = etemail.getText().toString().trim();
+            String password = etpassword.getText().toString().trim();
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Por favor ingrese todos los campos", Toast.LENGTH_SHORT).show();
+            } else {
+                UserRequest user = new UserRequest(email, password);
+                loginViewModel = new ViewModelProvider(MainActivity.this).get(LoginViewModel.class);
+                loginViewModel.loginUser(user).observe(MainActivity.this, token -> {
+                    Log.d("MainActivity", "Token: " + token.getUserId());
+                    if (token != null) {
+                        Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
+
+                        SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(MainActivity.this);
+                        sharedPreferencesHelper.saveToken(token.getAccessToken());
+                        sharedPreferencesHelper.saveUserId(token.getUserId());
+                        sharedPreferencesHelper.saveUserName(token.getUserName());
+                        sharedPreferencesHelper.saveUserEmail(token.getUserEmail());
+
+                        Intent intent = new Intent(MainActivity.this, Home.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    }
+                    btnlogin.setEnabled(true);
+                });
+                btnlogin.setEnabled(false);
             }
         });
     }

@@ -1,9 +1,4 @@
-// UserResponse.java
-
-// YApi QuickType插件生成，具体参考文档:https://plugins.jetbrains.com/plugin/18847-yapi-quicktype/documentation
-
 package com.example.projectzeus.models.response;
-import java.util.List;
 
 public class UserResponse {
     private String access_token;
@@ -18,6 +13,7 @@ public class UserResponse {
 
     public User getUser() { return user; }
     public void setUser(User value) { this.user = value; }
+
     public Long getUserId() {
         if (user != null) {
             return user.getId();
@@ -25,6 +21,7 @@ public class UserResponse {
             return null;
         }
     }
+
     public String getUserName() {
         if (user != null) {
             return user.getName();
@@ -32,6 +29,7 @@ public class UserResponse {
             return null;
         }
     }
+
     public String getUserEmail() {
         if (user != null) {
             return user.getEmail();
@@ -43,14 +41,14 @@ public class UserResponse {
 
 class User {
     private String name;
-    private long id;
+    private Long id;
     private String email;
 
     public String getName() { return name; }
     public void setName(String value) { this.name = value; }
 
-    public long getId() { return id; }
-    public void setid(long value) { this.id = value; }
+    public Long getId() { return id; }
+    public void setid(Long value) { this.id = value; }
 
     public String getEmail() { return email; }
     public void setEmail(String value) { this.email = value; }

@@ -1,12 +1,15 @@
 package com.example.projectzeus.viewmodel;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
+import com.example.projectzeus.models.response.LogoutResponse;
 import com.example.projectzeus.models.response.UserResponse;
-import com.example.projectzeus.models.user;
+import com.example.projectzeus.models.response.ValidateResponse;
 import com.example.projectzeus.repository.UserRepository;
 
 public class LoginViewModel extends ViewModel {
@@ -21,5 +24,12 @@ public class LoginViewModel extends ViewModel {
     }
     public LiveData<UserResponse> registerUser(RegisterRequest user) {
         return userRepository.registerUser(user);
+    }
+    public LiveData<LogoutResponse> logoutUser(Context context) {
+        return userRepository.logoutUser(context);
+    }
+
+    public LiveData<ValidateResponse> validateUser(Context context) {
+        return userRepository.validateUser(context);
     }
 }

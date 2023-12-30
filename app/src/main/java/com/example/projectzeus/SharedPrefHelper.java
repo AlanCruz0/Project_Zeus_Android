@@ -55,4 +55,13 @@ public class SharedPrefHelper {
     public String getUserEmail() {
         return sharedPreferences.getString(KEY_USER_EMAIL, null);
     }
+
+    public void clearUserData() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(KEY_TOKEN);
+        editor.remove(KEY_USER_ID);
+        editor.remove(KEY_USER_NAME);
+        editor.remove(KEY_USER_EMAIL);
+        editor.apply();
+    }
 }
