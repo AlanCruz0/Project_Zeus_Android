@@ -17,18 +17,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/imgzeus"
         />
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animationView"
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:lottie_rawRes="@raw/splash"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
+        android:id="@+id/imgzeus"
+        android:src="@drawable/icon"
         app:layout_constraintTop_toBottomOf="@id/txtzeus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="TODO"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

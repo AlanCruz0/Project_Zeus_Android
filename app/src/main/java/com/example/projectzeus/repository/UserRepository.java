@@ -2,18 +2,25 @@ package com.example.projectzeus.repository;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.projectzeus.SharedPrefHelper;
 import com.example.projectzeus.interfaces.ApiServices;
+import com.example.projectzeus.models.CocheItem;
 import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
+import com.example.projectzeus.models.response.CochesResponse;
 import com.example.projectzeus.models.response.LogoutResponse;
 import com.example.projectzeus.models.response.UserResponse;
 import com.example.projectzeus.models.response.ValidateResponse;
 import com.example.projectzeus.singleton.RetrofitClient;
+import com.example.projectzeus.ui.Home;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -125,6 +132,48 @@ public class UserRepository {
             }
             @Override
             public void onFailure(Call<ValidateResponse> call, Throwable t) {
+                resultLiveData.setValue(null);
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    public LiveData<CochesResponse> getCoches(Context context){
+        MutableLiveData<CochesResponse> resultLiveData = new MutableLiveData<>();
+
+        SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(context);
+        String accessToken = sharedPreferencesHelper.getToken();
+        Long userId = sharedPreferencesHelper.getUserId();
+        Log.d("UserRepository", "validateUser: " + accessToken + " " + userId);
+
+        if (accessToken == null || userId == null) {
+            resultLiveData.setValue(null);
+            return resultLiveData;
+        }
+
+        String authorizationHeader = "Bearer " + accessToken;
+        apiService.getCoches(userId, authorizationHeader).enqueue(new Callback<CochesResponse>() {
+            @Override
+            public void onResponse(Call<CochesResponse> call, Response<CochesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<CocheItem> coches = response.body().getData();
+                    String status = response.body().getStatus();
+
+                    if (coches != null && status.equals("200")) {
+                        // Envía la lista de coches a través del LiveData
+                        resultLiveData.setValue(response.body());
+                    } else {
+                        resultLiveData.setValue(null);
+                    }
+                } else {
+                    resultLiveData.setValue(null);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<CochesResponse> call, Throwable t) {
                 resultLiveData.setValue(null);
             }
         });

@@ -5,12 +5,16 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.projectzeus.models.CocheItem;
 import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
+import com.example.projectzeus.models.response.CochesResponse;
 import com.example.projectzeus.models.response.LogoutResponse;
 import com.example.projectzeus.models.response.UserResponse;
 import com.example.projectzeus.models.response.ValidateResponse;
 import com.example.projectzeus.repository.UserRepository;
+
+import java.util.List;
 
 public class LoginViewModel extends ViewModel {
     private UserRepository userRepository;
@@ -31,5 +35,9 @@ public class LoginViewModel extends ViewModel {
 
     public LiveData<ValidateResponse> validateUser(Context context) {
         return userRepository.validateUser(context);
+    }
+
+    public LiveData<CochesResponse> getCoches(Context context) {
+        return userRepository.getCoches(context);
     }
 }

@@ -2,6 +2,8 @@ package com.example.projectzeus.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +15,21 @@ import android.widget.Toast;
 import com.example.projectzeus.MainActivity;
 import com.example.projectzeus.R;
 import com.example.projectzeus.SharedPrefHelper;
+import com.example.projectzeus.adapters.CocheAdapter;
+import com.example.projectzeus.models.CocheItem;
 import com.example.projectzeus.models.response.LogoutResponse;
 import com.example.projectzeus.viewmodel.LoginViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Home extends AppCompatActivity {
     private TextView txtname;
     private SharedPrefHelper sharedPrefHelper;
     private ImageButton btnlogout;
+    private RecyclerView rvcoches;
+    private CocheAdapter cocheAdapter;
+    private LoginViewModel loginViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +37,9 @@ public class Home extends AppCompatActivity {
         txtname = findViewById(R.id.textname);
         sharedPrefHelper = new SharedPrefHelper(this);
         btnlogout = findViewById(R.id.imgback);
+        rvcoches = findViewById(R.id.rvcoches);
 
         String storedName = sharedPrefHelper.getUserName();
-        Log.d("Home", "onCreate: " + storedName);
-
         txtname.setText(storedName);
 
         btnlogout.setOnClickListener(v -> {
@@ -48,6 +57,19 @@ public class Home extends AppCompatActivity {
                     Toast.makeText(Home.this, "Logout error", Toast.LENGTH_SHORT).show();
                 }
             });
+        });
+
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModel.getCoches(this).observe(this, coches -> {
+            if (coches != null && coches.getData() != null) {
+                List<CocheItem> cocheItems = coches.getData();
+                cocheAdapter = new CocheAdapter(cocheItems);
+                rvcoches.setAdapter(cocheAdapter);
+                rvcoches.setLayoutManager(new LinearLayoutManager(this));
+                rvcoches.hasFixedSize();
+            } else {
+                Toast.makeText(this, "Error al cargar los coches", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
