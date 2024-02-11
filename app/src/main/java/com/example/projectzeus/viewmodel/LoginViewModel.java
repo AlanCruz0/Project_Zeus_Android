@@ -36,8 +36,4 @@ public class LoginViewModel extends ViewModel {
     public LiveData<ValidateResponse> validateUser(Context context) {
         return userRepository.validateUser(context);
     }
-
-    public LiveData<CochesResponse> getCoches(Context context) {
-        return userRepository.getCoches(context);
-    }
 }

@@ -18,6 +18,7 @@ import com.example.projectzeus.SharedPrefHelper;
 import com.example.projectzeus.adapters.CocheAdapter;
 import com.example.projectzeus.models.CocheItem;
 import com.example.projectzeus.models.response.LogoutResponse;
+import com.example.projectzeus.viewmodel.CocheViewModel;
 import com.example.projectzeus.viewmodel.LoginViewModel;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class Home extends AppCompatActivity {
     private RecyclerView rvcoches;
     private CocheAdapter cocheAdapter;
     private LoginViewModel loginViewModel;
+    private CocheViewModel cocheViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +61,8 @@ public class Home extends AppCompatActivity {
             });
         });
 
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        loginViewModel.getCoches(this).observe(this, coches -> {
+        CocheViewModel cocheViewModel = new ViewModelProvider(this).get(CocheViewModel.class);
+        cocheViewModel.getCoches(Home.this).observe(this, coches -> {
             if (coches != null && coches.getData() != null) {
                 List<CocheItem> cocheItems = coches.getData();
                 cocheAdapter = new CocheAdapter(cocheItems);
