@@ -1,9 +1,14 @@
 package com.example.projectzeus.ui;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -38,8 +43,6 @@ public class register extends AppCompatActivity {
         btnregister = findViewById(R.id.btnlogin);
 
         SpannableString spannableString = new SpannableString("Si ya tienes cuenta, Inicia Sesion");
-
-        // Crear un ClickableSpan para la palabra "Registrate"
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View view) {
@@ -47,48 +50,70 @@ public class register extends AppCompatActivity {
                 startActivity(intent);
             }
         };
-
-        // Establecer el ClickableSpan en la palabra "Registrate"
         spannableString.setSpan(clickableSpan, 21, 34, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        // Establecer el texto en el TextView
         txtlogin.setText(spannableString);
-
-        // Permitir la detección de clics en los enlaces del TextView
         txtlogin.setMovementMethod(LinkMovementMethod.getInstance());
 
-        btnregister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = etemail.getText().toString().trim();
-                String password = etpassword.getText().toString().trim();
-                String name = etname.getText().toString().trim();
-                if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
-                    Toast.makeText(register.this, "Por favor ingrese todos los campos", Toast.LENGTH_SHORT).show();
-                } else {
-                    RegisterRequest user = new RegisterRequest(name, email, password);
-                    loginViewModel = new ViewModelProvider(register.this).get(LoginViewModel.class);
-                    loginViewModel.registerUser(user).observe(register.this, token -> {
-                        if (token != null) {
-                            Toast.makeText(register.this, "Login success", Toast.LENGTH_SHORT).show();
+        btnregister.setOnClickListener(v -> {
+            String email = etemail.getText().toString().trim();
+            String password = etpassword.getText().toString().trim();
+            String name = etname.getText().toString().trim();
+            if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
+                Toast.makeText(register.this, "Por favor ingrese todos los campos", Toast.LENGTH_SHORT).show();
+            } else {
+                RegisterRequest user = new RegisterRequest(name, email, password);
+                loginViewModel = new ViewModelProvider(register.this).get(LoginViewModel.class);
+                loginViewModel.registerUser(user).observe(register.this, token -> {
+                    if (token != null) {
+                        Toast.makeText(register.this, "Login success", Toast.LENGTH_SHORT).show();
 
-                            SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(register.this);
-                            sharedPreferencesHelper.saveToken(token.getAccessToken());
-                            sharedPreferencesHelper.saveUserId(token.getUserId());
-                            sharedPreferencesHelper.saveUserName(token.getUserName());
-                            sharedPreferencesHelper.saveUserEmail(token.getUserEmail());
+                        SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(register.this);
+                        sharedPreferencesHelper.saveToken(token.getAccessToken());
+                        sharedPreferencesHelper.saveUserId(token.getUserId());
+                        sharedPreferencesHelper.saveUserName(token.getUserName());
+                        sharedPreferencesHelper.saveUserEmail(token.getUserEmail());
 
-                            Intent intent = new Intent(register.this, Home.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(register.this, "Login failed", Toast.LENGTH_SHORT).show();
-                        }
-                        btnregister.setEnabled(true);
-                    });
-                    btnregister.setEnabled(false);
-                }
+                        solicitarPermiso();
+                    } else {
+                        Toast.makeText(register.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    }
+                    btnregister.setEnabled(true);
+                });
+                btnregister.setEnabled(false);
             }
         });
+    }
+
+    public void solicitarPermiso(){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(new String[]{android.Manifest.permission.CALL_PHONE}, 1987);
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CALL_PHONE)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Permiso necesario")
+                    .setMessage("Necesitamos el permiso para realizar llamadas telefónicas, ¿estás de acuerdo?")
+                    .setPositiveButton("Sí", (dialog, which) -> ActivityCompat.requestPermissions(register.this, new String[]{android.Manifest.permission.CALL_PHONE}, 1))
+                    .setNegativeButton("No", (dialog, which) -> Toast.makeText(register.this, "La función de llamada no estará disponible sin el permiso.", Toast.LENGTH_SHORT).show())
+                    .show();
+        } else {
+            home();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1987){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                home();
+            }
+        }
+    }
+
+    public void home(){
+        Intent intent = new Intent(register.this, Home.class);
+        startActivity(intent);
+        finish();
     }
 }
