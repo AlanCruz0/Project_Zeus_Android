@@ -1,9 +1,15 @@
 package com.example.projectzeus;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -55,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
                 if (validateResponse.getStatus() == 200) {
                     //Toast.makeText(this, "Token valido", Toast.LENGTH_SHORT).show();
                     Log.i("MainActivity", "Token valido");
-                    Intent intent = new Intent(MainActivity.this, Home.class);
-                    startActivity(intent);
-                    finish();
+                    // Verificar permiso de llamada
+
+                    solicitarPermiso();
                 } else {
                     Log.i("MainActivity", "Token invalido");
                     //Toast.makeText(this, "Token invalido", Toast.LENGTH_SHORT).show();
@@ -88,9 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         sharedPreferencesHelper.saveUserName(token.getUserName());
                         sharedPreferencesHelper.saveUserEmail(token.getUserEmail());
 
-                        Intent intent = new Intent(MainActivity.this, Home.class);
-                        startActivity(intent);
-                        finish();
+                        solicitarPermiso();
                     } else {
                         Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                     }
@@ -99,6 +103,38 @@ public class MainActivity extends AppCompatActivity {
                 btnlogin.setEnabled(false);
             }
         });
+    }
+
+    public void solicitarPermiso(){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
+            requestPermissions(new String[]{android.Manifest.permission.CALL_PHONE}, 1987);
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CALL_PHONE)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Permiso necesario")
+                    .setMessage("Necesitamos el permiso para realizar llamadas telefónicas, ¿estás de acuerdo?")
+                    .setPositiveButton("Sí", (dialog, which) -> ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.CALL_PHONE}, 1))
+                    .setNegativeButton("No", (dialog, which) -> Toast.makeText(MainActivity.this, "La función de llamada no estará disponible sin el permiso.", Toast.LENGTH_SHORT).show())
+                    .show();
+        } else {
+            home();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1987){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                home();
+            }
+        }
+    }
+
+    public void home(){
+        Intent intent = new Intent(MainActivity.this, Home.class);
+        startActivity(intent);
+        finish();
     }
 
 }
