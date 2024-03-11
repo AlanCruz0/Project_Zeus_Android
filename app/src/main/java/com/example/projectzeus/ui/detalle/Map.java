@@ -53,9 +53,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        obtenerUbicacion();
-        this.mMap.setOnMapClickListener(latLng -> {
-            obtenerUbicacion();
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                obtenerUbicacion();
+                handler.postDelayed(this, 30000);
+            }
         });
     }
 
@@ -72,7 +76,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                 LatLng ubicacionCoche = new LatLng(latitud, longitud);
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(ubicacionCoche).title("Marcador en Ubicación en " + latitud + " " + longitud));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionCoche, 20.0f));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionCoche, 17.0f));
             } else {
                 Toast.makeText(Map.this, "Error al cargar la ubicación", Toast.LENGTH_SHORT).show();
             }
