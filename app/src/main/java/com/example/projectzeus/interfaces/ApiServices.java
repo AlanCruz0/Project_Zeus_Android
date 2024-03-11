@@ -4,6 +4,7 @@ import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
 import com.example.projectzeus.models.response.CochesResponse;
 import com.example.projectzeus.models.response.LogoutResponse;
+import com.example.projectzeus.models.response.UbicacionResponse;
 import com.example.projectzeus.models.response.UserResponse;
 import com.example.projectzeus.models.response.ValidateResponse;
 
@@ -29,4 +30,7 @@ public interface ApiServices {
 
     @GET("coches/{user_id}")
     Call<CochesResponse> getCoches(@Path("user_id") Long userId, @Header("Authorization") String authorizationHeader);
+
+    @GET("ubicacion/{coche_id}")
+    Call<UbicacionResponse> getUbicacion(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
 }

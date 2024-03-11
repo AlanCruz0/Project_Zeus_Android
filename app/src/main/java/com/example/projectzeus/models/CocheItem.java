@@ -5,10 +5,12 @@ import java.io.Serializable;
 public class CocheItem implements Serializable {
     private String alias;
     private String descripcion;
+    private Long id;
 
-    public CocheItem(String alias, String descripcion) {
+    public CocheItem(String alias, String descripcion, Long id) {
         this.alias = alias;
         this.descripcion = descripcion;
+        this.id = id;
     }
 
     public String getAlias() {
@@ -25,5 +27,12 @@ public class CocheItem implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 }
