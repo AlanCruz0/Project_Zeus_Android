@@ -1,8 +1,11 @@
 package com.example.projectzeus.interfaces;
 
+import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
 import com.example.projectzeus.models.response.CochesResponse;
+import com.example.projectzeus.models.response.LedCTResponse;
+import com.example.projectzeus.models.response.LedPTResponse;
 import com.example.projectzeus.models.response.LogoutResponse;
 import com.example.projectzeus.models.response.UbicacionResponse;
 import com.example.projectzeus.models.response.UserResponse;
@@ -33,4 +36,10 @@ public interface ApiServices {
 
     @GET("ubicacion/{coche_id}")
     Call<UbicacionResponse> getUbicacion(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
+
+    @GET("ledcontrol/{coche_id}")
+    Call<LedCTResponse> getLed(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
+
+    @POST("ledcontrol/{coche_id}")
+    Call<LedPTResponse> setLed(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader, @Body LedRequest ledRequest);
 }
