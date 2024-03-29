@@ -19,6 +19,7 @@ import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.models.request.UserRequest;
 import com.example.projectzeus.ui.detalle.Joystick;
 import com.example.projectzeus.ui.detalle.Map;
+import com.example.projectzeus.ui.detalle.Report;
 import com.example.projectzeus.viewmodel.LoginViewModel;
 import com.example.projectzeus.viewmodel.RegistroViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,7 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class Detalles_activity extends AppCompatActivity {
     private TextView txtname;
     private Switch switchled;
-    private Button btnmap, btncontrol;
+    private Button btnmap, btncontrol, btnreporte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class Detalles_activity extends AppCompatActivity {
         switchled   = findViewById(R.id.swled);
         btnmap      = findViewById(R.id.btnmapa);
         btncontrol  = findViewById(R.id.btncontrol);
+        btnreporte  = findViewById(R.id.btnreport);
 
         CocheItem coche = (CocheItem) getIntent().getSerializableExtra("coche");
         Log.i("name", coche.getAlias());
@@ -65,6 +67,12 @@ public class Detalles_activity extends AppCompatActivity {
 
         btncontrol.setOnClickListener(v -> {
             Intent intent = new Intent(Detalles_activity.this, Joystick.class);
+            startActivity(intent);
+        });
+
+        btnreporte.setOnClickListener(v -> {
+            Intent intent = new Intent(Detalles_activity.this, Report.class);
+            intent.putExtra("coche", coche);
             startActivity(intent);
         });
 

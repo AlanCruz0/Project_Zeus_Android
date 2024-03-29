@@ -5,12 +5,14 @@ import java.io.Serializable;
 public class ReporteItem implements Serializable {
     private String fecha;
     private String hora;
-    private String distancia;
+    private String valor;
+    public String unidades;
 
-    public ReporteItem(String fecha, String hora, String distancia) {
+    public ReporteItem(String fecha, String hora, String valor, String unidades) {
         this.fecha = fecha;
         this.hora = hora;
-        this.distancia = distancia;
+        this.valor = valor;
+        this.unidades = unidades;
     }
 
     public String getFecha() {
@@ -29,11 +31,23 @@ public class ReporteItem implements Serializable {
         this.hora = hora;
     }
 
-    public String getDistancia() {
-        return distancia;
+    public String getValor() {
+        return valor;
     }
 
-    public void setDistancia(String distancia) {
-        this.distancia = distancia;
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
+
+    public String getUnidades() {
+        return unidades;
+    }
+
+    public void setUnidades(String unidades) {
+        this.unidades = unidades;
+    }
+
+    public String getDistancia() {
+        return valor+" "+unidades;
     }
 }

@@ -11,6 +11,7 @@ import com.example.projectzeus.interfaces.ApiServices;
 import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.models.response.LedCTResponse;
 import com.example.projectzeus.models.response.LedPTResponse;
+import com.example.projectzeus.models.response.ReporteResponse;
 import com.example.projectzeus.models.response.UbicacionResponse;
 import com.example.projectzeus.singleton.RetrofitClient;
 
@@ -123,6 +124,40 @@ public class RegistroRepository {
 
             @Override
             public void onFailure(Call<LedPTResponse> call, Throwable t) {
+                resultLiveData.setValue(null);
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    public LiveData<ReporteResponse> getReporte(Context context, Long cocheId) {
+        MutableLiveData<ReporteResponse> resultLiveData = new MutableLiveData<>();
+
+        SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(context);
+        String accessToken = sharedPreferencesHelper.getToken();
+        Log.d("UserRepository", "validateUser: " + accessToken + " " + cocheId);
+
+        if (accessToken == null || cocheId == null) {
+            resultLiveData.setValue(null);
+            return resultLiveData;
+        }
+
+        String authorizationHeader = "Bearer " + accessToken;
+
+        apiService.getReporte(cocheId, authorizationHeader).enqueue(new Callback<ReporteResponse>() {
+            @Override
+            public void onResponse(Call<ReporteResponse> call, Response<ReporteResponse> response) {
+                if (response.isSuccessful()) {
+                    ReporteResponse reporte = response.body();
+                    resultLiveData.setValue(reporte);
+                } else {
+                    resultLiveData.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReporteResponse> call, Throwable t) {
                 resultLiveData.setValue(null);
             }
         });
