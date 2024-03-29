@@ -1,8 +1,10 @@
 package com.example.projectzeus.interfaces;
 
+import com.example.projectzeus.models.request.AgregarRequest;
 import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
+import com.example.projectzeus.models.response.AgregarResponse;
 import com.example.projectzeus.models.response.CochesResponse;
 import com.example.projectzeus.models.response.LedCTResponse;
 import com.example.projectzeus.models.response.LedPTResponse;
@@ -46,4 +48,7 @@ public interface ApiServices {
 
     @GET("reportedis/{coche_id}")
     Call<ReporteResponse> getReporte(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
+
+    @POST("coches")
+    Call<AgregarResponse> addCoche(@Header("Authorization") String authorizationHeader, @Body AgregarRequest agregarRequest);
 }

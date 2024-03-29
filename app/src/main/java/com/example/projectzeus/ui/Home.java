@@ -27,7 +27,7 @@ import java.util.List;
 public class Home extends AppCompatActivity {
     private TextView txtname;
     private SharedPrefHelper sharedPrefHelper;
-    private ImageButton btnlogout;
+    private ImageButton btnlogout, btnplus;
     private RecyclerView rvcoches;
     private CocheAdapter cocheAdapter;
     private LoginViewModel loginViewModel;
@@ -40,6 +40,7 @@ public class Home extends AppCompatActivity {
         sharedPrefHelper = new SharedPrefHelper(this);
         btnlogout = findViewById(R.id.imgback);
         rvcoches = findViewById(R.id.rvcoches);
+        btnplus = findViewById(R.id.imgplus);
 
         String storedName = sharedPrefHelper.getUserName();
         txtname.setText(storedName);
@@ -59,6 +60,10 @@ public class Home extends AppCompatActivity {
                     Toast.makeText(Home.this, "Logout error", Toast.LENGTH_SHORT).show();
                 }
             });
+        });
+        btnplus.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, Agregar_Auto.class);
+            startActivity(intent);
         });
 
         CocheViewModel cocheViewModel = new ViewModelProvider(this).get(CocheViewModel.class);
