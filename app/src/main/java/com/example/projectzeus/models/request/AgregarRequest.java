@@ -1,12 +1,15 @@
 package com.example.projectzeus.models.request;
 
 public class AgregarRequest {
-    private String alias, descripcion;
+    private String alias;
+    private String descripcion;
+    private String codigo;
     private Long user_id;
 
-    public AgregarRequest(String alias, String descripcion, Long user_id) {
+    public AgregarRequest(String alias, String descripcion, String codigo, Long user_id) {
         this.alias = alias;
         this.descripcion = descripcion;
+        this.codigo = codigo;
         this.user_id = user_id;
     }
     public String getAlias() {
@@ -32,4 +35,8 @@ public class AgregarRequest {
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
+
+    public String getCodigo() { return codigo; }
+
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 }

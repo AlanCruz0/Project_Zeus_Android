@@ -2,6 +2,7 @@ package com.example.projectzeus.repository;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -44,20 +45,23 @@ public class CocheRepository {
         apiService.addCoche(authorizationHeader, addre).enqueue(new Callback<AgregarResponse>() {
             @Override
             public void onResponse(Call<AgregarResponse> call, Response<AgregarResponse> response) {
-                if (response.isSuccessful()) {
-                    AgregarResponse agregar = response.body();
-                    resultLiveData.setValue(agregar);
+                AgregarResponse agregar = response.body();
+                if (agregar != null) {
+                    if (response.isSuccessful()) {
+                        resultLiveData.setValue(agregar);
+                    } else {
+                        resultLiveData.setValue(null);
+                    }
                 } else {
                     resultLiveData.setValue(null);
                 }
             }
-
             @Override
             public void onFailure(Call<AgregarResponse> call, Throwable t) {
                 resultLiveData.setValue(null);
             }
         });
-
+        Log.d("CocheRepository", "addCoche: " + resultLiveData.getValue());
         return resultLiveData;
     }
 }

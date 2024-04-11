@@ -49,6 +49,6 @@ public interface ApiServices {
     @GET("reportedis/{coche_id}")
     Call<ReporteResponse> getReporte(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
 
-    @POST("coches")
+    @POST("coche/nuevo")
     Call<AgregarResponse> addCoche(@Header("Authorization") String authorizationHeader, @Body AgregarRequest agregarRequest);
 }

@@ -37,6 +37,8 @@ import java.util.TimerTask;
 public class Map extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private TextView txtdata;
+    private Handler handler;
+    private Runnable runnable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,19 +55,21 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        Handler handler = new Handler();
-        handler.post(new Runnable() {
+        handler = new Handler();
+        runnable = new Runnable() {
             @Override
             public void run() {
                 obtenerUbicacion();
                 handler.postDelayed(this, 30000);
             }
-        });
+        };
+        handler.post(runnable);
     }
 
     private void obtenerUbicacion() {
         CocheItem coche = (CocheItem) getIntent().getSerializableExtra("coche");
         Log.i("name", coche.getAlias());
+        Log.i("id", coche.getId().toString());
 
         RegistroViewModel registroViewModel = new ViewModelProvider(this).get(RegistroViewModel.class);
         registroViewModel.getUbicacion(Map.this, coche.getId()).observe(Map.this, ubicacion -> {
@@ -77,9 +81,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
                 mMap.clear();
                 mMap.addMarker(new MarkerOptions().position(ubicacionCoche).title("Marcador en Ubicación en " + latitud + " " + longitud));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacionCoche, 17.0f));
+
             } else {
                 Toast.makeText(Map.this, "Error al cargar la ubicación", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (handler != null && runnable != null) {
+            handler.removeCallbacks(runnable);
+        }
     }
 }

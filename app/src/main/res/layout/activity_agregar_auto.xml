@@ -16,6 +16,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/txtcodigo"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ingresa el codigo del coche"
+        android:id="@+id/txtcodigo"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/txttitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/etcodigo"
+
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etcodigo"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        app:layout_constraintTop_toBottomOf="@id/txtcodigo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/txtnombre"
         />
     <TextView
@@ -24,7 +47,7 @@
         android:text="Ingresa el nombre del auto"
         android:id="@+id/txtnombre"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/txttitle"
+        app:layout_constraintTop_toBottomOf="@id/etcodigo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/etnombre"
@@ -72,7 +95,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

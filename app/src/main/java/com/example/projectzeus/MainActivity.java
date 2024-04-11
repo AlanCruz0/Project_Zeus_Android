@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                 UserRequest user = new UserRequest(email, password);
                 loginViewModel = new ViewModelProvider(MainActivity.this).get(LoginViewModel.class);
                 loginViewModel.loginUser(user).observe(MainActivity.this, token -> {
-                    Log.d("MainActivity", "Token: " + token.getUserId());
                     if (token != null) {
                         Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
 
