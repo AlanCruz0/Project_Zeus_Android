@@ -5,6 +5,7 @@ import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
 import com.example.projectzeus.models.response.AgregarResponse;
+import com.example.projectzeus.models.response.CocheSensorsResponse;
 import com.example.projectzeus.models.response.CochesResponse;
 import com.example.projectzeus.models.response.LedCTResponse;
 import com.example.projectzeus.models.response.LedPTResponse;
@@ -34,8 +35,14 @@ public interface ApiServices {
     @POST("validar/{user_id}")
     Call<ValidateResponse> validateUser(@Path("user_id") Long userId, @Header("Authorization") String authorizationHeader);
 
+    @POST("coche/nuevo")
+    Call<AgregarResponse> addCoche(@Header("Authorization") String authorizationHeader, @Body AgregarRequest agregarRequest);
+
     @GET("coches/{user_id}")
     Call<CochesResponse> getCoches(@Path("user_id") Long userId, @Header("Authorization") String authorizationHeader);
+
+    @GET("coche/sensors/{coche_id}")
+    Call<CocheSensorsResponse> getSensors(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
 
     @GET("ubicacion/{coche_id}")
     Call<UbicacionResponse> getUbicacion(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
@@ -48,7 +55,4 @@ public interface ApiServices {
 
     @GET("reportedis/{coche_id}")
     Call<ReporteResponse> getReporte(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
-
-    @POST("coche/nuevo")
-    Call<AgregarResponse> addCoche(@Header("Authorization") String authorizationHeader, @Body AgregarRequest agregarRequest);
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.projectzeus.models.request.AgregarRequest;
 import com.example.projectzeus.models.response.AgregarResponse;
+import com.example.projectzeus.models.response.CocheSensorsResponse;
 import com.example.projectzeus.models.response.CochesResponse;
 import com.example.projectzeus.repository.CocheRepository;
 import com.example.projectzeus.repository.UserRepository;
@@ -26,5 +27,9 @@ public class CocheViewModel extends ViewModel {
 
     public LiveData<AgregarResponse> addCoches(Context context, AgregarRequest addre) {
         return cocheRepository.addCoche(context, addre);
+    }
+
+    public LiveData<CocheSensorsResponse> getSensors(Context context, Long cocheId) {
+        return cocheRepository.getSensors(context, cocheId);
     }
 }

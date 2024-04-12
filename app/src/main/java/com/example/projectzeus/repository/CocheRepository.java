@@ -12,6 +12,7 @@ import com.example.projectzeus.interfaces.ApiServices;
 import com.example.projectzeus.models.request.AgregarRequest;
 import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.models.response.AgregarResponse;
+import com.example.projectzeus.models.response.CocheSensorsResponse;
 import com.example.projectzeus.models.response.LedPTResponse;
 import com.example.projectzeus.singleton.RetrofitClient;
 
@@ -62,6 +63,42 @@ public class CocheRepository {
             }
         });
         Log.d("CocheRepository", "addCoche: " + resultLiveData.getValue());
+        return resultLiveData;
+    }
+
+    public LiveData<CocheSensorsResponse> getSensors(Context context, Long cocheId) {
+        MutableLiveData<CocheSensorsResponse> resultLiveData = new MutableLiveData<>();
+
+        SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(context);
+        String accessToken = sharedPreferencesHelper.getToken();
+        Log.d("CocheRepository", "validateUser: " + accessToken);
+
+        if (accessToken == null || cocheId == null) {
+            resultLiveData.setValue(null);
+            return resultLiveData;
+        }
+
+        String authorizationHeader = "Bearer " + accessToken;
+
+        apiService.getSensors(cocheId, authorizationHeader).enqueue(new Callback<CocheSensorsResponse>() {
+            @Override
+            public void onResponse(Call<CocheSensorsResponse> call, Response<CocheSensorsResponse> response) {
+                CocheSensorsResponse sensors = response.body();
+                if (sensors != null) {
+                    if (response.isSuccessful()) {
+                        resultLiveData.setValue(sensors);
+                    } else {
+                        resultLiveData.setValue(null);
+                    }
+                } else {
+                    resultLiveData.setValue(null);
+                }
+            }
+            @Override
+            public void onFailure(Call<CocheSensorsResponse> call, Throwable t) {
+                resultLiveData.setValue(null);
+            }
+        });
         return resultLiveData;
     }
 }
