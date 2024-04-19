@@ -22,7 +22,10 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 import com.example.projectzeus.R;
+import com.example.projectzeus.models.CocheItem;
+import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.ui.Detalles_activity;
+import com.example.projectzeus.viewmodel.RegistroViewModel;
 
 public class Joystick extends AppCompatActivity {
     private Button btndetener, btnavanzar, btnretroceder;
@@ -39,6 +42,24 @@ public class Joystick extends AppCompatActivity {
         btnavanzar = findViewById(R.id.btnup);
         btnretroceder = findViewById(R.id.btndown);
 
+        btndetener.setEnabled(false);
+        btnavanzar.setEnabled(false);
+        btnretroceder.setEnabled(false);
+
+        CocheItem coche = (CocheItem) getIntent().getSerializableExtra("coche");
+        LedRequest ledRequest = new LedRequest("C");
+        RegistroViewModel registroViewModel = new RegistroViewModel();
+        registroViewModel.setControl(this, coche.getId(), ledRequest).observe(this, controlResponse -> {
+            if (controlResponse.getStatus() == 200) {
+                btndetener.setEnabled(true);
+                btnavanzar.setEnabled(true);
+                btnretroceder.setEnabled(true);
+            } else {
+                Toast.makeText(this, "Error al cambiar de modo", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
@@ -47,6 +68,8 @@ public class Joystick extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+        enviarDatosBluetooth("C");
 
         btndetener.setOnClickListener(v -> {
             enviarDatosBluetooth("D");
@@ -128,6 +151,16 @@ public class Joystick extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         enviarDatosBluetooth("S");
+        CocheItem coche = (CocheItem) getIntent().getSerializableExtra("coche");
+        LedRequest ledRequest = new LedRequest("A");
+        RegistroViewModel registroViewModel = new RegistroViewModel();
+        registroViewModel.setControl(this, coche.getId(), ledRequest).observe(this, controlResponse -> {
+            if (controlResponse.getStatus() == 200) {
+                Log.d("Joystick", "Modo automático activado");
+            } else {
+                Toast.makeText(this, "Error al cambiar de modo", Toast.LENGTH_SHORT).show();
+            }
+        });
         super.onDestroy();
         closeBluetoothSocket();
     }

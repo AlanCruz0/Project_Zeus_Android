@@ -58,7 +58,6 @@ public class CocheAdapter extends RecyclerView.Adapter<CocheAdapter.ViewHolder>{
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), Detalles_activity.class);
-            // Agrega la información del coche al Intent
             intent.putExtra("coche", coche);
             v.getContext().startActivity(intent);
         }

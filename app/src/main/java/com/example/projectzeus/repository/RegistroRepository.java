@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.projectzeus.SharedPrefHelper;
 import com.example.projectzeus.interfaces.ApiServices;
 import com.example.projectzeus.models.request.LedRequest;
+import com.example.projectzeus.models.response.ChoqueResponse;
+import com.example.projectzeus.models.response.ControlResponse;
 import com.example.projectzeus.models.response.LedCTResponse;
 import com.example.projectzeus.models.response.LedPTResponse;
 import com.example.projectzeus.models.response.ReporteResponse;
@@ -165,5 +167,71 @@ public class RegistroRepository {
         return resultLiveData;
     }
 
+    public LiveData<ControlResponse> setControl(Context context, Long cocheId, LedRequest ledre) {
+        MutableLiveData<ControlResponse> resultLiveData = new MutableLiveData<>();
 
+        SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(context);
+        String accessToken = sharedPreferencesHelper.getToken();
+        Log.d("UserRepository", "validateUser: " + accessToken + " " + cocheId);
+
+        if (accessToken == null || ledre == null || cocheId == null) {
+            resultLiveData.setValue(null);
+            return resultLiveData;
+        }
+
+        String authorizationHeader = "Bearer " + accessToken;
+
+        apiService.setControl(cocheId, authorizationHeader, ledre).enqueue(new Callback<ControlResponse>() {
+            @Override
+            public void onResponse(Call<ControlResponse> call, Response<ControlResponse> response) {
+                if (response.isSuccessful()) {
+                    ControlResponse control = response.body();
+                    resultLiveData.setValue(control);
+                } else {
+                    resultLiveData.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ControlResponse> call, Throwable t) {
+                resultLiveData.setValue(null);
+            }
+        });
+
+        return resultLiveData;
+    }
+
+    public LiveData<ChoqueResponse> getChoque(Context context, Long cocheId) {
+        MutableLiveData<ChoqueResponse> resultLiveData = new MutableLiveData<>();
+
+        SharedPrefHelper sharedPreferencesHelper = new SharedPrefHelper(context);
+        String accessToken = sharedPreferencesHelper.getToken();
+        Log.d("UserRepository", "validateUser: " + accessToken + " " + cocheId);
+
+        if (accessToken == null || cocheId == null) {
+            resultLiveData.setValue(null);
+            return resultLiveData;
+        }
+
+        String authorizationHeader = "Bearer " + accessToken;
+
+        apiService.getChoque(cocheId, authorizationHeader).enqueue(new Callback<ChoqueResponse>() {
+            @Override
+            public void onResponse(Call<ChoqueResponse> call, Response<ChoqueResponse> response) {
+                if (response.isSuccessful()) {
+                    ChoqueResponse choque = response.body();
+                    resultLiveData.setValue(choque);
+                } else {
+                    resultLiveData.setValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChoqueResponse> call, Throwable t) {
+                resultLiveData.setValue(null);
+            }
+        });
+
+        return resultLiveData;
+    }
 }

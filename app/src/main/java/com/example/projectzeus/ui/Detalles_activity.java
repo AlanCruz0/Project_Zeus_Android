@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Switch;
@@ -38,6 +39,14 @@ public class Detalles_activity extends AppCompatActivity {
     private boolean ledExists = false;
     private boolean mapExists = false;
     private boolean reportExists = false;
+    private Handler mhandler;
+    private Runnable mrunnable;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mhandler.removeCallbacks(mrunnable);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +107,23 @@ public class Detalles_activity extends AppCompatActivity {
             }
         });
 
+        mhandler = new Handler();
+        mrunnable = new Runnable() {
+            @Override
+            public void run() {
+                RegistroViewModel registroViewModel = new ViewModelProvider(Detalles_activity.this).get(RegistroViewModel.class);
+                registroViewModel.getChoque(Detalles_activity.this, coche.getId()).observe(Detalles_activity.this, choque -> {
+                    if (choque != null && choque.getData() != null && choque.getData().equals("1")) {
+                        Intent intent = new Intent(Detalles_activity.this, AlertActivity.class);
+                        intent.putExtra("coche", coche);
+                        startActivity(intent);
+                    }
+                });
+                mhandler.postDelayed(this, 30000);
+            }
+        };
+        mhandler.postDelayed(mrunnable, 30000);
+
 
         btnmap.setOnClickListener(v -> {
             Intent intent = new Intent(Detalles_activity.this, Map.class);
@@ -107,6 +133,7 @@ public class Detalles_activity extends AppCompatActivity {
 
         btncontrol.setOnClickListener(v -> {
             Intent intent = new Intent(Detalles_activity.this, Joystick.class);
+            intent.putExtra("coche", coche);
             startActivity(intent);
         });
 

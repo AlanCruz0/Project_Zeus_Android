@@ -5,8 +5,10 @@ import com.example.projectzeus.models.request.LedRequest;
 import com.example.projectzeus.models.request.RegisterRequest;
 import com.example.projectzeus.models.request.UserRequest;
 import com.example.projectzeus.models.response.AgregarResponse;
+import com.example.projectzeus.models.response.ChoqueResponse;
 import com.example.projectzeus.models.response.CocheSensorsResponse;
 import com.example.projectzeus.models.response.CochesResponse;
+import com.example.projectzeus.models.response.ControlResponse;
 import com.example.projectzeus.models.response.LedCTResponse;
 import com.example.projectzeus.models.response.LedPTResponse;
 import com.example.projectzeus.models.response.LogoutResponse;
@@ -55,4 +57,10 @@ public interface ApiServices {
 
     @GET("reportedis/{coche_id}")
     Call<ReporteResponse> getReporte(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
+
+    @GET("ledchoque/{coche_id}")
+    Call<ChoqueResponse> getChoque(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader);
+
+    @POST("control/{coche_id}")
+    Call<ControlResponse> setControl(@Path("coche_id") Long cocheId, @Header("Authorization") String authorizationHeader, @Body LedRequest controlRequest);
 }

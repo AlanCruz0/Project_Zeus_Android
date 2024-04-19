@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.projectzeus.models.ReporteItem;
 import com.example.projectzeus.models.request.LedRequest;
+import com.example.projectzeus.models.response.ChoqueResponse;
 import com.example.projectzeus.models.response.CochesResponse;
+import com.example.projectzeus.models.response.ControlResponse;
 import com.example.projectzeus.models.response.LedCTResponse;
 import com.example.projectzeus.models.response.LedPTResponse;
 import com.example.projectzeus.models.response.ReporteResponse;
@@ -33,5 +35,11 @@ public class RegistroViewModel extends ViewModel {
     }
     public LiveData<ReporteResponse> getReporte(Context context, Long cocheId) {
         return registroRepository.getReporte(context, cocheId);
+    }
+    public LiveData<ControlResponse> setControl(Context context, Long cocheId, LedRequest ledRe) {
+        return registroRepository.setControl(context, cocheId, ledRe);
+    }
+    public LiveData<ChoqueResponse> getChoque(Context context, Long userId) {
+        return registroRepository.getChoque(context, userId);
     }
 }
